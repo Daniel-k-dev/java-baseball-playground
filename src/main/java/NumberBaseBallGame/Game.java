@@ -9,34 +9,49 @@ public class Game {
     private Computer computer = new Computer();
     private OutputView outputView = new OutputView();
     private GameStatus gameStatus = GameStatus.PLAY;
+    private Balls computerBalls = computer.initializeBalls();
     public void play() {
-        Balls computerBalls = computer.initializeBalls();
-
-        while(true) {
+        while(GameStatus.isPlay(gameStatus)) {
             inputView.show();
             String numbers = inputView.inputNumber();
 
-            if (validator.isValid(numbers)) {
-                Balls userBalls = new Balls(parseBallsNumber(numbers));
-                List<BallStatus> statuses = userBalls.play(computerBalls);
-                GameResult gameResult = new GameResult(statuses);
-                outputView.showResult(gameResult);
-                if (gameResult.isThreeStrike()) {
-                    showGameOver();
-                    gameStatus = choiceGameStatus();
-                    if (GameStatus.isPlay(gameStatus)) {
-                        computerBalls = computer.initializeBalls();
-                    }
-                }
-            }
-            if (!validator.isValid(numbers)) System.out.println("잘못된 값을 입력하였습니다.");
-            if (GameStatus.isEnd(gameStatus)) break;
+            boolean isValidInput = validator.isValid(numbers);
+
+            inputValidNumber(isValidInput, numbers);
+            inputInvalidNumber(isValidInput);
         }
     }
 
+    private void inputValidNumber (boolean isValidInput, String numbers) {
+        if (isValidInput) {
+            Balls userBalls = new Balls(parseBallsNumber(numbers));
+            List<BallStatus> statuses = userBalls.play(computerBalls);
+            GameResult gameResult = new GameResult(statuses);
+            outputView.showResult(gameResult);
+            threeStriked(gameResult);
+        }
+    }
+
+    private void inputInvalidNumber(boolean isValidInput) {
+        if (!isValidInput) System.out.println("잘못된 값을 입력하였습니다.");
+    }
+
+    private void threeStriked (GameResult gameResult) {
+        if (gameResult.isThreeStrike()) {
+            showGameOver();
+            gameStatus = choiceGameStatus();
+            selectRestart();
+        }
+    }
+
+    private void selectRestart() {
+        if (GameStatus.isPlay(gameStatus)) {
+            computerBalls = computer.initializeBalls();
+        }
+    }
 
     private GameStatus choiceGameStatus() {
-        int choice = inputView.choiceRestart();
+        String choice = inputView.choiceRestart();
         if (isChoiceRestart(choice)) {
             return GameStatus.PLAY;
         }
@@ -44,15 +59,15 @@ public class Game {
             return GameStatus.END;
         }
         outputView.showIllegalInput();
-        return GameStatus.PLAY;
+        return choiceGameStatus();
     }
 
-    private boolean isChoiceRestart(int choice) {
-        return choice == 1;
+    private boolean isChoiceRestart(String choice) {
+        return choice.equals("1");
     }
-    
-    private boolean isChoiceEnd (int choice) {
-        return choice == 2;
+
+    private boolean isChoiceEnd (String choice) {
+        return choice.equals("2");
     }
 
     private List<Integer> parseBallsNumber(String numbers) {

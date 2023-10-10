@@ -12,9 +12,7 @@ public class InputView {
         return sc.nextLine();
     }
 
-    public int choiceRestart () {
-        int choice = sc.nextInt();
-        sc.nextLine();
-        return choice;
+    public String choiceRestart () {
+        return sc.nextLine();
     }
 }
