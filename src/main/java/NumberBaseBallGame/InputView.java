@@ -8,11 +8,11 @@ public class InputView {
         System.out.print("숫자를 입력해 주세요 : ");
     }
 
-    public String inputNumber() {
+    public String choiceRestart () {
         return sc.nextLine();
     }
 
-    public String choiceRestart () {
+    public String inputNumbers() {
         return sc.nextLine();
     }
 }

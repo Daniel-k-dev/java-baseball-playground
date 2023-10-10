@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.Random;
 
 public class Computer {
+    private Balls balls;
+
+    public Computer() {
+        setRandomBalls();
+    }
 
     public List<Integer> generateRandomNumbers() {
         List<Integer> numbers = new ArrayList<>();
@@ -24,5 +29,13 @@ public class Computer {
     public Balls initializeBalls() {
         List<Integer> computerNumbers = generateRandomNumbers();
         return new Balls(computerNumbers);
+    }
+
+    public void setRandomBalls() {
+        balls = initializeBalls();
+    }
+
+    public Balls getBalls() {
+        return this.balls;
     }
 }
