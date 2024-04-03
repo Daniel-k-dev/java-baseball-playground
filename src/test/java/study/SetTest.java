@@ -5,9 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
+import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +25,6 @@ public class SetTest {
         numbers.add(3);
     }
 
-    // Test Case 구현
     @Test
     @DisplayName("HashSet의 size 메소드를 이용하여 HashSet의 길이를 가지고 오는 테스트")
     void size () {
@@ -40,6 +40,20 @@ public class SetTest {
         boolean parsedExpect = Boolean.parseBoolean(expect);
 
         assertEquals(parsedExpect, numbers.contains(parsedInput));
+    }
+
+    @DisplayName("요구사항 2")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3})
+    void contains (int i) {
+        assertTrue(numbers.contains(i));
+    }
+
+    @DisplayName("요구사항 3")
+    @ParameterizedTest
+    @CsvSource({"1,true","2,true","3,true","4,false","5,false"})
+    void contains (int i, boolean b) {
+        assertThat(numbers.contains(i)).isEqualTo(b);
     }
 
 }
